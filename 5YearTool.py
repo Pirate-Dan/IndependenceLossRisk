@@ -7,19 +7,18 @@ import numpy as np
 
 #set essential formatting code
 dateformat = "%m/%d/%Y"
-#create array to store instances of AssessRev
-Contact_Array = np.array(["Person_ID","BirthDate","ContactDate","CurrentServ","NewServ","RAG"])
+
 #create a dataframe of each service variety, intensity level and risk factor modifier
-#create lists
+    #create lists
 ServType = ["Equipment","Day Support","Direct Payment","Homecare:Low","Homecare:Mid","Homecare:High"]
 ServIntens = [1,2,3,4,5,6]
 ServModify = [0.6,0.8,1,1.1,1.3,1.5]
 Header = ["Service","Intensity","RiskModifier"]
-#combine lists to array
+    #combine lists to array
 ServInfo = np.array((ServType))
 ServInfo=ServInfo.reshape(6,1)
 ServInfo = np.hstack((ServInfo,np.array((ServIntens)).reshape(6,1),np.array((ServModify)).reshape(6,1)))
-#convert array to dataframe
+    #convert array to dataframe
 ServInfo = pd.DataFrame(ServInfo,columns = Header)
 ServInfo = ServInfo.set_index("Service")
 
@@ -44,7 +43,7 @@ class AssessRev:
     """
     #add validation list for service types (CurrentServ and NewServ)
     ServType = ServType
-    
+
     #create initialisation method to include key details at initialisation
     def __init__(self,PersonId,ContactDate,BirthDate,CurrentServ,NewServ,AgeFac=1,ServFac=1,ServChange=1,Rag=1):
         self.PersonId = PersonId
@@ -94,16 +93,28 @@ class AssessRev:
 
 assess1 = AssessRev("789231","21/05/2025","13/07/1935","Homecare:Low","Homecare:Mid")
 
+#funtion to assign a modifier based on direction and magnitude of service intensity change before including in class as an instance function
 currVal = ServInfo.at[assess1.CurrentServ,"Intensity"]
 newVal = ServInfo.at[assess1.NewServ,"Intensity"]
-if currVal>newVal:
-    changeFac = 0.5
-elif currVal<newVal:
+change = int(newVal)-int(currVal)
+if change > 2:
+    changeFac = 2
+elif change > 1:
+    changeFac = 1.75
+elif change > 0:
     changeFac = 1.5
-else:
+elif change == 0:
     changeFac = 1
+elif change < -2:
+    changeFac = 0.25
+elif change < -1:
+    changeFac = 0.5
+else:
+    changeFac = 0.75
+
 
 print(changeFac)
+
 #assess1.update_ServFac()
 #print(assess1.ServFac)
 
