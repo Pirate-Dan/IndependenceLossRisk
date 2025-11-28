@@ -2,6 +2,7 @@
 import pandas as pd
 import tkinter as tk
 import datetime as dt
+import math
 dateformat = "%m/%d/%Y"
 #Create a new class for individual information
 class AssessRev:
@@ -57,7 +58,21 @@ class AssessRev:
     pass
 assess1 = AssessRev("789231","21/05/2025","13/07/1935","Homecare:Low","Homecare:Mid")
 #assess1.update_AgeFac(1.5)
+#print(assess1.AgeFac)
+
+# create function to recalculate and replace the AgeFac of a AssessRev Instance
+def calc_AgeFactor(ID):
+    dob = pd.to_datetime(ID.BirthDate)
+    doc = pd.to_datetime(ID.ContactDate)
+    AgeCalc =  (doc-dob).days
+    AgeCalc = math.floor(AgeCalc/365)
+    if AgeCalc >85:
+        AgeCalc = 1.5
+    elif AgeCalc >75:
+        AgeCalc = 1.2
+    else:
+        AgeCalc = 1
+    ID.update_AgeFac(AgeCalc)
+
+#calc_AgeFactor(assess1)
 print(assess1.AgeFac)
-
-
-
