@@ -10,14 +10,14 @@ dateformat = "%m/%d/%Y"
 
 #create a dataframe of each service variety, intensity level and risk factor modifier
 #create lists
-ServType = ["Equipment","Day Support","Direct Payment","Homecare:Low","Homecare:Mid","Homecare:High"]
-ServIntens = [1,2,3,4,5,6]
-ServModify = [0.6,0.8,1,1.1,1.3,1.5]
+ServType = ["None","Equipment","Day Support","Direct Payment","Homecare:Low","Homecare:Mid","Homecare:High"]
+ServIntens = [1,2,3,4,5,6,7]
+ServModify = [0.2,0.6,0.8,1,1.1,1.3,1.5]
 Header = ["Service","Intensity","RiskModifier"]
 #combine lists to array
 ServInfo = np.array((ServType))
-ServInfo=ServInfo.reshape(6,1)
-ServInfo = np.hstack((ServInfo,np.array((ServIntens)).reshape(6,1),np.array((ServModify)).reshape(6,1)))
+ServInfo=ServInfo.reshape(7,1)
+ServInfo = np.hstack((ServInfo,np.array((ServIntens)).reshape(7,1),np.array((ServModify)).reshape(7,1)))
 #convert array to dataframe
 ServInfo = pd.DataFrame(ServInfo,columns = Header)
 ServInfo = ServInfo.set_index("Service")
@@ -64,9 +64,18 @@ class AssessRev:
         self.PersonId = PersonId
         self.ContactDate = pd.to_datetime(ContactDate,dayfirst=True)
         self.BirthDate = pd.to_datetime(BirthDate,dayfirst=True)
-        self.Status = Status
-        self.CurrentServ = CurrentServ
-        self.NewServ = NewServ
+        if not (Status in AssessRev.STATUS_TYPES):
+            raise ValueError(f"{Status} not a valid status.")
+        else:
+            self.Status = Status
+        if not (CurrentServ in AssessRev.SERV_TYPES):
+            raise ValueError(f"{CurrentServ} is not a valid service type.")
+        else:
+            self.CurrentServ = CurrentServ
+        if not(NewServ in AssessRev.SERV_TYPES):
+            raise ValueError(f"{NewServ} is not a valid service type.")
+        else:
+            self.NewServ = NewServ
         self.AgeFac = AgeFac
         self.ServFac = ServFac
         self.ServChange=ServChange
@@ -136,15 +145,26 @@ class AssessRev:
     def update_Rag(self):
         newRag = float(self.Rag)*float(self.ServFac)*float(self.AgeFac)*float(self.ServChange)*float(self.StatusFac)
         self.Rag = newRag
-    #add class methods to restrict values for NewServ,CurrServ and Status
-
+    
+    #add class methods to provide details of valid Service and Status types
+    @classmethod
+    def get_SERV_TYPES(cls):
+        return cls.SERV_TYPES
+    
+    @classmethod
+    def get_STATUS_TYPES(cls):
+        return cls.STATUS_TYPES
+    
     pass
 
 assess1 = AssessRev("789231","21/05/2025","13/07/1935","Hospital Discharge","Homecare:Low","Homecare:Mid")
-assess1.update_ServChange()
-assess1.update_AgeFac()
-assess1.update_ServFac()
-assess1.update_StatusFac()
-assess1.update_Rag()
+#assess1.update_ServChange()
+#assess1.update_AgeFac()
+#assess1.update_ServFac()
+#assess1.update_StatusFac()
+#assess1.update_Rag()
 #print("Rag:",assess1.Rag,"ServFac:",assess1.ServFac,"ServChange:",assess1.ServChange,"AgeFac:",assess1.AgeFac,"StatusFac:",assess1.StatusFac)
-print(ServInfo)
+#print(ServInfo)
+#services = AssessRev.get_SERV_TYPES()
+#print(services)
+#print(AssessRev.get_STATUS_TYPES())
