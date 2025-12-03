@@ -1,6 +1,6 @@
 #import key libraries
 import pandas as pd
-import tkinter as tk
+from tkinter import Tk,Label,Button
 import datetime as dt
 import math
 import numpy as np
@@ -16,8 +16,9 @@ ServModify = [0.2,0.6,0.8,1,1.1,1.3,1.5]
 Header = ["Service","Intensity","RiskModifier"]
 #combine lists to array
 ServInfo = np.array((ServType))
-ServInfo=ServInfo.reshape(7,1)
-ServInfo = np.hstack((ServInfo,np.array((ServIntens)).reshape(7,1),np.array((ServModify)).reshape(7,1)))
+servLen = len(ServInfo)
+ServInfo=ServInfo.reshape(servLen,1)
+ServInfo = np.hstack((ServInfo,np.array((ServIntens)).reshape(servLen,1),np.array((ServModify)).reshape(servLen,1)))
 #convert array to dataframe
 ServInfo = pd.DataFrame(ServInfo,columns = Header)
 ServInfo = ServInfo.set_index("Service")
@@ -27,8 +28,9 @@ StatusRoute = ["Transition","Community","Hospital Discharge","Existing Service"]
 StatusModify = [1.2,1.2,1.5,1]
 StatusHeader = ["Entry","Modifier"]
 #combine lists to array
-StatusInfo = np.array((StatusRoute)).reshape(4,1)
-StatusInfo = np.hstack((StatusInfo,np.array((StatusModify)).reshape(4,1)))
+StatusLen = len(StatusRoute)
+StatusInfo = np.array((StatusRoute)).reshape(StatusLen,1)
+StatusInfo = np.hstack((StatusInfo,np.array((StatusModify)).reshape(StatusLen,1)))
 #convert to dataframe
 StatusInfo = pd.DataFrame(StatusInfo,columns = StatusHeader).set_index("Entry")
 
@@ -157,7 +159,56 @@ class AssessRev:
     
     pass
 
-assess1 = AssessRev("789231","21/05/2025","13/07/1935","Hospital Discharge","Homecare:Low","Homecare:Mid")
+#create the class for the TkInter GUI
+class InputGUI:
+    """
+    The GUI that will provide the front end capability to generate a RAG on behalf of the user.
+
+    To provide data entry boxes for the key attibutes (Person ID, Birth Date, Contact Date, current service, new service, status).
+
+    Data entry in these cases will be limited to defined values:
+                Current Service - SERV_TYPES
+                New Service - SERV_TYPES
+                Status - STATUS TYPES
+
+    To also provide a generate RAG button that will produce the risk score for the individual.
+
+    Contact Date and Birth date need to be entered as parsable date formats, or an error message will be generated
+       """
+    def __init__(self,main):
+
+        #main window with title
+        self.main = main
+        main.title("Loss of Independence Risk Tool")
+
+        #Instructions box
+
+        #Entry box - Person ID
+
+        #Entry box - Birth date
+
+        #Entry box - Contact Date
+
+        #Entry box - Current Service
+
+        #Entry box - New Service
+
+        #Entry Box - status
+
+        #Output - Age
+
+        #Button - calculate RAG
+
+        #Button - Export RAG
+
+    pass
+
+root=Tk()
+my_gui = InputGUI(root)
+root.mainloop()
+
+#assess1 = AssessRev("789231","21/05/2025","13/07/1935","Hospital Discharge","Homecare:Low","Homecare:Mid")
+
 #assess1.update_ServChange()
 #assess1.update_AgeFac()
 #assess1.update_ServFac()
