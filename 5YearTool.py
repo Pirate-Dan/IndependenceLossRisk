@@ -1,6 +1,9 @@
 #import key libraries
 import pandas as pd
-from tkinter import Tk,Label,Button
+import tkinter as tk
+from tkinter import *
+from tkinter import ttk,Tk,Label,Button,Entry,OptionMenu
+from tkcalendar import DateEntry
 import datetime as dt
 import math
 import numpy as np
@@ -181,31 +184,117 @@ class InputGUI:
         self.main = main
         main.title("Loss of Independence Risk Tool")
 
+        #commands to extract the relevant data
+        def curr_serv():
+            txt_curr=cb_curr.get()            
+        
+        def new_serv():
+            txt_new = cb_new.get()
+
+        def status():
+            txt_status = cb_status.get()         
+        
+        def person():
+            txt_person = pers_val.get()        
+
+        def birth_date():
+            bd = dob.get_date()
+
+        def contact_date():
+            cd = con_date.get_date()
+        
+        def age_calc():
+            dob_val = pd.to_datetime(dob.get_date(),dayfirst=True)
+            doc_val = pd.to_datetime(con_date.get_date(),dayfirst=True)
+            age = (doc_val - dob_val).days
+            age = math.floor(age/365)
+            lbl_age.config(text = age)
+        
+        #method to run full RAG calculation
+        def rag_calc():
+            #create AssessRev instance from data entry
+            contactData = [pers_val.get(),con_date.get(),dob.get(),cb_status.get(),cb_curr.get(),cb_new.get()]
+            contact=AssessRev(contactData[0],contactData[1],contactData[2],contactData[3],contactData[4],contactData[5])
+            #run the core methods from AssessRev class
+            contact.update_AgeFac()
+            contact.update_StatusFac()
+            contact.update_ServFac()
+            contact.update_ServChange()
+            #run the update RAG method from AssessRev class
+            contact.update_Rag()
+            if contact.Rag <=1:
+                txt_rag = "Green"
+            elif contact.Rag >2:
+                txt_rag = "Red"
+            else:
+                txt_rag = "Amber"
+            #create confirmation label
+            rag_info=(f"Person ID: {contact.PersonId} Contact Date: {contact.ContactDate}")
+            lbl_rag.config(text=txt_rag)
+            lbl_facs.config(text=rag_info)
+
+             
         #Instructions box
 
         #Entry box - Person ID
-
+        pers_val = tk.StringVar()
+        pers_id = Entry(main,textvariable=pers_val,font=('calibre',12,'normal'))
+        pers_id.pack()
+        
         #Entry box - Birth date
+        dob = DateEntry(main,width=12,date_pattern = 'dd/mm/yyyy')
+        dob.pack()
 
         #Entry box - Contact Date
+        con_date = DateEntry(main,width = 12,date_pattern = 'dd/mm/yyyy')
+        con_date.pack()
 
         #Entry box - Current Service
+            #create combobox
+        cb_curr =ttk.Combobox(main,values=ServType,width=36)
+        cb_curr.set("Please the persons current service")
+        cb_curr.pack()
 
         #Entry box - New Service
+            #create combobox
+        cb_new=ttk.Combobox(main,values=ServType,width=36)
+        cb_new.set("Please select the recommended service")
+        cb_new.pack()
 
         #Entry Box - status
+        cb_status = ttk.Combobox(main,values=StatusRoute,width=36)
+        cb_status.set("Please select the persons current status")
+        cb_status.pack()
 
         #Output - Age
+        lbl_age = Label(main,text=" ")
+        lbl_age.pack()
 
         #Button - calculate RAG
+        self.Rag_button = Button(main,text="Calculate RAG",command=rag_calc)
+        self.Rag_button.pack()
 
+        #label to display calculated rag
         #Button - Export RAG
+        self.export_button = Button(main,text="Export RAG",command=age_calc)
+        self.export_button.pack()
+
+        #Button - clear data
+        self.clear_button = Button(main,text="Clear data")
+        self.clear_button.pack()
+
+        lbl_rag = Label(main,text=" ")
+        lbl_rag.pack()
+
+        lbl_facs=Label(main,text=" ")
+        lbl_facs.pack()
 
     pass
 
 root=Tk()
 my_gui = InputGUI(root)
 root.mainloop()
+
 
 #assess1 = AssessRev("789231","21/05/2025","13/07/1935","Hospital Discharge","Homecare:Low","Homecare:Mid")
 
