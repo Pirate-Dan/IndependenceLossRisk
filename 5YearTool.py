@@ -233,23 +233,34 @@ class InputGUI:
             rag_info=(f"Person ID: {contact.PersonId} Contact Date: {contact.ContactDate.strftime("%d/%m/%Y")} Date of Birth: {contact.BirthDate.strftime("%d/%m/%Y")} Status: {contact.Status} Current Service: {contact.CurrentServ} Recommended Service: {contact.NewServ} RAG: {txt_rag}")
             lbl_rag.config(text=txt_rag)
             lbl_facs.config(text=rag_info)
+            dob_val = pd.to_datetime(dob.get_date(),dayfirst=True)
+            doc_val = pd.to_datetime(con_date.get_date(),dayfirst=True)
+            age = (doc_val - dob_val).days
+            age = math.floor(age/365)
+            lbl_age.config(text = age)
         
         def export_rag():
             e_rag=lbl_facs.cget("text")
-            fName=(f"{per_lbl.get()}-{con_date.get_date()}.txt")
+            fName=(f"{per_lbl.cget("text")}-{con_date.get_date()}.txt")
             #write to text file
             with open(fName,"w",encoding="utf-8") as f:
                 f.write(e_rag)
             with open(fName,"r",encoding="utf-8") as f:
                 print(f.read())
 
-
+        def clear_data():
+            pers_id.config(pers_val.set(""))
+            dateReset = dt.datetime.now()
+            con_date.set_date(dateReset)
+            dob.set_date(dateReset)
             
+
+           
         #Instructions box
 
 
         #Entry box - Person ID
-        per_lbl = Label(main, text="Person ID)")
+        per_lbl = Label(main, text="Person ID")
         per_lbl.pack()
         pers_val = tk.StringVar()
         pers_id = Entry(main,textvariable=pers_val,font=('calibre',12,'normal'))
@@ -298,7 +309,7 @@ class InputGUI:
         self.export_button.pack()
 
         #Button - clear data
-        self.clear_button = Button(main,text="Clear data")
+        self.clear_button = Button(main,text="Clear data",command=clear_data)
         self.clear_button.pack()
 
         lbl_rag = Label(main,text=" ")
