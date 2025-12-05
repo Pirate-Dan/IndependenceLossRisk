@@ -7,6 +7,7 @@ from tkcalendar import DateEntry
 import datetime as dt
 import math
 import numpy as np
+import csv
 
 #set essential formatting code
 dateformat = "%m/%d/%Y"
@@ -229,23 +230,40 @@ class InputGUI:
             else:
                 txt_rag = "Amber"
             #create confirmation label
-            rag_info=(f"Person ID: {contact.PersonId} Contact Date: {contact.ContactDate}")
+            rag_info=(f"Person ID: {contact.PersonId} Contact Date: {contact.ContactDate.strftime("%d/%m/%Y")} Date of Birth: {contact.BirthDate.strftime("%d/%m/%Y")} Status: {contact.Status} Current Service: {contact.CurrentServ} Recommended Service: {contact.NewServ} RAG: {txt_rag}")
             lbl_rag.config(text=txt_rag)
             lbl_facs.config(text=rag_info)
+        
+        def export_rag():
+            e_rag=lbl_facs.cget("text")
+            fName=(f"{per_lbl.get()}-{con_date.get_date()}.txt")
+            #write to text file
+            with open(fName,"w",encoding="utf-8") as f:
+                f.write(e_rag)
+            with open(fName,"r",encoding="utf-8") as f:
+                print(f.read())
 
-             
+
+            
         #Instructions box
 
+
         #Entry box - Person ID
+        per_lbl = Label(main, text="Person ID)")
+        per_lbl.pack()
         pers_val = tk.StringVar()
         pers_id = Entry(main,textvariable=pers_val,font=('calibre',12,'normal'))
         pers_id.pack()
         
         #Entry box - Birth date
+        dob_lbl = Label(main,text="Date of Birth")
+        dob_lbl.pack()
         dob = DateEntry(main,width=12,date_pattern = 'dd/mm/yyyy')
         dob.pack()
 
         #Entry box - Contact Date
+        doc_lbl=Label(main, text="Date of Contact")
+        doc_lbl.pack()
         con_date = DateEntry(main,width = 12,date_pattern = 'dd/mm/yyyy')
         con_date.pack()
 
@@ -276,7 +294,7 @@ class InputGUI:
 
         #label to display calculated rag
         #Button - Export RAG
-        self.export_button = Button(main,text="Export RAG",command=age_calc)
+        self.export_button = Button(main,text="Export RAG",command=export_rag)
         self.export_button.pack()
 
         #Button - clear data
