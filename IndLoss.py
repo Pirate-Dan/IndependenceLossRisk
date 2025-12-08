@@ -14,7 +14,7 @@ dateformat = "%m/%d/%Y"
 
 #create a dataframe of each service variety, intensity level and risk factor modifier
 #create lists
-ServType = ["None","Equipment","Day Support","Direct Payment","Homecare:Low","Homecare:Mid","Homecare:High"]
+ServType = ["None","Equipment","Day Support","Direct Payment","Homecare: Low","Homecare: Mid","Homecare: High"]
 ServIntens = [1,2,3,4,5,6,7]
 ServModify = [0.2,0.6,0.8,1,1.1,1.3,1.5]
 Header = ["Service","Intensity","RiskModifier"]

@@ -11,7 +11,7 @@ import csv
 
 #set essential formatting code
 dateformat = "%m/%d/%Y"
-#import the class and methods from logic model
+#import the classes, methods and key elements from logic model
 import IndLoss
 from IndLoss import AssessRev
 from IndLoss import ServType
@@ -178,7 +178,7 @@ class InputGUI:
         self.frame_inst.grid(row=1,column=2,columnspan=1)         
           
         #Instructions box
-        lbl_inst = Label(self.frame_inst,wraplength=150,text=" ")
+        lbl_inst = Label(self.frame_inst,wraplength=400,justify="left",text="Instructions for completion:\n\n1. Person ID: Please enter the person ID number as recorded in the care management system.\n\n2. Date of Birth / Contact date: Please use the drop down calendar or enter the date directly in the format dd/mm/yyyy\n\n3: Status: Please select the current status of the person based on their current location or source of referral\n\n4: Current Service: Please select the service that is being reviewed.  If the person is new to ASC please select None.\n\n5: New Service: Please select the service that is being recommended following the review\n\nOnce all the data cells have been completed, please click the Calculate RAG button to generate the RAG rating for the person and record it in the care management system against the review\n\nOnce the RAG has been calculated and is displayed, you can use the Export RAG button to produce a copy of the RAG as a downloadable text file.\n\nPlease use the Clear Data button to wipe all information ready for the next RAG to be calculated")
         lbl_inst.pack()
 
         #Entry box - Person ID
