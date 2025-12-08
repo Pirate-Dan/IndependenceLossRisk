@@ -86,7 +86,7 @@ class InputGUI:
             contact.update_Rag()
             if contact.Rag <=1:
                 txt_rag = "Green"
-            elif contact.Rag >2:
+            elif contact.Rag >3:
                 txt_rag = "Red"
             else:
                 txt_rag = "Amber"
