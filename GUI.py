@@ -2,7 +2,7 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk,Tk,Label,Button,Entry,OptionMenu
+from tkinter import ttk,Tk,Label,Button,Entry,OptionMenu,messagebox
 from tkcalendar import DateEntry
 import datetime as dt
 import math
@@ -74,8 +74,9 @@ class InputGUI:
             try:
                 contact=AssessRev(contactData[0],contactData[1],contactData[2],contactData[3],contactData[4],contactData[5])
             except:
-                err_val="please ensure all fields have been completed correctly"
+                err_val="Please ensure all fields have been completed correctly, and that a suitable option has been selected from all dropdowns"
                 #add a pop up to show the error value
+                messagebox.showinfo(title="Incorrect information provided",message=err_val)
             #run the core methods from AssessRev class
             contact.update_AgeFac()
             contact.update_StatusFac()
