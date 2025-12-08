@@ -215,7 +215,11 @@ class InputGUI:
         def rag_calc():
             #create AssessRev instance from data entry
             contactData = [pers_val.get(),con_date.get(),dob.get(),cb_status.get(),cb_curr.get(),cb_new.get()]
-            contact=AssessRev(contactData[0],contactData[1],contactData[2],contactData[3],contactData[4],contactData[5])
+            try:
+                contact=AssessRev(contactData[0],contactData[1],contactData[2],contactData[3],contactData[4],contactData[5])
+            except:
+                err_val="please ensure all fields have been completed correctly"
+                #add a pop up to show the error value
             #run the core methods from AssessRev class
             contact.update_AgeFac()
             contact.update_StatusFac()
