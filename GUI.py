@@ -1,15 +1,23 @@
-#Import the libraries and formats
+#import key libraries
 import pandas as pd
-from tkinter import Tk,Label,Button
+import tkinter as tk
+from tkinter import *
+from tkinter import ttk,Tk,Label,Button,Entry,OptionMenu
+from tkcalendar import DateEntry
 import datetime as dt
 import math
 import numpy as np
+import csv
 
 #set essential formatting code
 dateformat = "%m/%d/%Y"
 #import the class and methods from logic model
 import IndLoss
 from IndLoss import AssessRev
+from IndLoss import ServType
+from IndLoss import ServInfo
+from IndLoss import StatusInfo
+from IndLoss import StatusRoute
 
 #create the class for the TkInter GUI
 class InputGUI:
