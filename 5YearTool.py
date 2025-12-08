@@ -229,22 +229,54 @@ class InputGUI:
                 txt_rag = "Red"
             else:
                 txt_rag = "Amber"
-            #create confirmation label
-            rag_info=(f"Person ID: {contact.PersonId} Contact Date: {contact.ContactDate.strftime("%d/%m/%Y")} Date of Birth: {contact.BirthDate.strftime("%d/%m/%Y")} Status: {contact.Status} Current Service: {contact.CurrentServ} Recommended Service: {contact.NewServ} RAG: {txt_rag}")
-            lbl_rag.config(text=txt_rag)
-            lbl_facs.config(text=rag_info)
+            #create confirmation labels
+            pers_info=(f"Person ID: {contact.PersonId}")
+            contact_info=(f"Contact Date: {contact.ContactDate.strftime("%d/%m/%Y")}")
+            dob_info = (f"Date of Birth: {contact.BirthDate.strftime("%d/%m/%Y")}")
+            stat_info=(f"Status: {contact.Status}")
+            curr_info=(f"Current Service: {contact.CurrentServ}")
+            new_info=(f"Recommended Service: {contact.NewServ}")
+            #assign rag label value
+            rag_info=(f"RAG: {txt_rag}")
+            lbl_rag.config(text=rag_info)
+            #calculate age
             dob_val = pd.to_datetime(dob.get_date(),dayfirst=True)
             doc_val = pd.to_datetime(con_date.get_date(),dayfirst=True)
             age = (doc_val - dob_val).days
             age = math.floor(age/365)
+            age=(f"Age: {age}")
             lbl_age.config(text = age)
+            #assign info label values
+            lbl_Person.config(text=pers_info)
+            lbl_cont.config(text=contact_info)
+            lbl_dob.config(text=dob_info)
+            lbl_age_con.config(text=age)
+            lbl_stat.config(text=stat_info)
+            lbl_curr.config(text=curr_info)
+            lbl_new.config(text=new_info)
         
         def export_rag():
-            e_rag=lbl_facs.cget("text")
-            fName=(f"{per_lbl.cget("text")}-{con_date.get_date()}.txt")
-            #write to text file
-            with open(fName,"w",encoding="utf-8") as f:
-                f.write(e_rag)
+            #get the info
+            e_rag=lbl_rag.cget("text")
+            e_per=lbl_Person.cget("text")
+            e_cont=lbl_cont.cget("text")
+            e_dob=lbl_dob.cget("text")
+            e_age=lbl_age_con.cget("text")
+            e_status=lbl_stat.cget("text")
+            e_curr=lbl_curr.cget("text")
+            e_new=lbl_new.cget("text")
+            #create the text file name
+            fName=(f"{pers_val.get()}-{con_date.get_date()}.txt")
+            #write to text file, appending rows
+            with open(fName,"a",encoding="utf-8") as f:
+                f.write(f"{e_rag}\n")
+                f.write(f"{e_per}\n")
+                f.write(f"{e_cont}\n")
+                f.write(f"{e_dob}\n")
+                f.write(f"{e_age}\n")
+                f.write(f"{e_status}\n")
+                f.write(f"{e_curr}\n")
+                f.write(f"{e_new}\n")
             with open(fName,"r",encoding="utf-8") as f:
                 print(f.read())
 
@@ -253,77 +285,125 @@ class InputGUI:
             dateReset = dt.datetime.now()
             con_date.set_date(dateReset)
             dob.set_date(dateReset)
-            
+            cb_new.set("Please select the recommended service")
+            cb_curr.set("Please select the current service")
+            cb_status.set("Please select the persons current status")
+            lbl_rag.config(text=" ")
+            lbl_Person.config(text=" ")
+            lbl_cont.config(text=" ")
+            lbl_dob.config(text=" ")
+            lbl_age_con.config(text=" ")
+            lbl_stat.config(text=" ")
+            lbl_curr.config(text=" ")
+            lbl_new.config(text=" ")
 
-           
+        #create a frame to group the data entry together
+        self.frame_entry = ttk.Frame(main)
+        self.frame_entry.config(padding=(20,10))
+        self.frame_entry.grid(row=1,column=1)
+
+        #create a frame to group the buttons together
+        self.frame_button=ttk.Frame(main)
+        self.frame_button.config(padding=(20,10))
+        self.frame_button.grid(row=3,column=1,columnspan=2)
+
+        #create a frame for the outputs
+        self.frame_output=ttk.Frame(main)
+        self.frame_output.config(padding=(20,10))
+        self.frame_output.grid(row=2,column=1,columnspan=2)
+
+        #create a frame for the instructions
+        self.frame_inst=ttk.Frame(main)
+        self.frame_inst.config(padding=(20,10))
+        self.frame_inst.grid(row=1,column=2,columnspan=1)         
+          
         #Instructions box
-
+        lbl_inst = Label(self.frame_inst,wraplength=150,text=" ")
+        lbl_inst.pack()
 
         #Entry box - Person ID
-        per_lbl = Label(main, text="Person ID")
-        per_lbl.pack()
+        per_lbl = Label(self.frame_entry, text="Person ID")
+        per_lbl.grid(row=0,column=1,columnspan=1)
         pers_val = tk.StringVar()
-        pers_id = Entry(main,textvariable=pers_val,font=('calibre',12,'normal'))
-        pers_id.pack()
+        pers_id = Entry(self.frame_entry,textvariable=pers_val,font=('calibre',12,'normal'))
+        pers_id.grid(row=1,column=1,columnspan=1)
         
         #Entry box - Birth date
-        dob_lbl = Label(main,text="Date of Birth")
-        dob_lbl.pack()
-        dob = DateEntry(main,width=12,date_pattern = 'dd/mm/yyyy')
-        dob.pack()
+        dob_lbl = Label(self.frame_entry,text="Date of Birth")
+        dob_lbl.grid(row=4,column=1,columnspan=1)
+        dob = DateEntry(self.frame_entry,width=12,date_pattern = 'dd/mm/yyyy')
+        dob.grid(row = 5,column = 1,columnspan=1)
 
         #Entry box - Contact Date
-        doc_lbl=Label(main, text="Date of Contact")
-        doc_lbl.pack()
-        con_date = DateEntry(main,width = 12,date_pattern = 'dd/mm/yyyy')
-        con_date.pack()
+        doc_lbl=Label(self.frame_entry, text="Date of Contact")
+        doc_lbl.grid(row=2,column=1,columnspan=1)
+        con_date = DateEntry(self.frame_entry,width = 12,date_pattern = 'dd/mm/yyyy')
+        con_date.grid(row=3,column = 1,columnspan=1)
 
         #Entry box - Current Service
             #create combobox
-        cb_curr =ttk.Combobox(main,values=ServType,width=36)
+        cb_curr =ttk.Combobox(self.frame_entry,values=ServType,width=36)
         cb_curr.set("Please the persons current service")
-        cb_curr.pack()
+        cb_curr.grid(row=8,column=1,columnspan=1)
 
         #Entry box - New Service
             #create combobox
-        cb_new=ttk.Combobox(main,values=ServType,width=36)
+        cb_new=ttk.Combobox(self.frame_entry,values=ServType,width=36)
         cb_new.set("Please select the recommended service")
-        cb_new.pack()
+        cb_new.grid(row=9,column=1,columnspan=1)
 
         #Entry Box - status
-        cb_status = ttk.Combobox(main,values=StatusRoute,width=36)
+        cb_status = ttk.Combobox(self.frame_entry,values=StatusRoute,width=36)
         cb_status.set("Please select the persons current status")
-        cb_status.pack()
+        cb_status.grid(row=7,column=1,columnspan=1)
 
         #Output - Age
-        lbl_age = Label(main,text=" ")
-        lbl_age.pack()
+        lbl_age = Label(self.frame_entry,text=" ")
+        lbl_age.grid(row=6,column=1,columnspan=1)
 
         #Button - calculate RAG
-        self.Rag_button = Button(main,text="Calculate RAG",command=rag_calc)
-        self.Rag_button.pack()
-
-        #label to display calculated rag
+        self.Rag_button = Button(self.frame_button,text="Calculate RAG",command=rag_calc)
+        self.Rag_button.grid(row=1,column=1)
+        
         #Button - Export RAG
-        self.export_button = Button(main,text="Export RAG",command=export_rag)
-        self.export_button.pack()
+        self.export_button = Button(self.frame_button,text="Export RAG",command=export_rag)
+        self.export_button.grid(row=1,column=2)
 
         #Button - clear data
-        self.clear_button = Button(main,text="Clear data",command=clear_data)
-        self.clear_button.pack()
+        self.clear_button = Button(self.frame_button,text="Clear data",command=clear_data)
+        self.clear_button.grid(row=1,column=3)
 
-        lbl_rag = Label(main,text=" ")
-        lbl_rag.pack()
+        #Output Labels
+        lbl_rag = Label(self.frame_output,font=("Helvetica",26,"bold"),text=" ")
+        lbl_rag.grid(row=0, column=1)
 
-        lbl_facs=Label(main,text=" ")
-        lbl_facs.pack()
+        lbl_Person=Label(self.frame_output,text=" ",justify="left")
+        lbl_Person.grid(row=1, column=1)
+
+        lbl_cont=Label(self.frame_output,text=" ",justify="left")
+        lbl_cont.grid(row=2,column=1)
+
+        lbl_dob=Label(self.frame_output,text=" ",justify="left")
+        lbl_dob.grid(row=3,column=1)
+
+        lbl_age_con = Label(self.frame_output,text=" ",justify="left")
+        lbl_age_con.grid(row=4,column=1)
+
+        lbl_stat=Label(self.frame_output,text=" ",justify="left")
+        lbl_stat.grid(row=5,column=1)
+
+        lbl_curr=Label(self.frame_output,text=" ",justify="left")
+        lbl_curr.grid(row=6,column=1)
+
+        lbl_new=Label(self.frame_output,text=" ",justify="left")
+        lbl_new.grid(row=7,column=1)
+        
 
     pass
 
 root=Tk()
 my_gui = InputGUI(root)
 root.mainloop()
-
 
 #assess1 = AssessRev("789231","21/05/2025","13/07/1935","Hospital Discharge","Homecare:Low","Homecare:Mid")
 
