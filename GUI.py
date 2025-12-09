@@ -11,6 +11,7 @@ import csv
 
 #set essential formatting code
 dateformat = "%m/%d/%Y"
+
 #import the classes, methods and key elements from logic model
 import IndLoss
 from IndLoss import AssessRev
@@ -30,6 +31,7 @@ class InputGUI:
                 Current Service - SERV_TYPES
                 New Service - SERV_TYPES
                 Status - STATUS TYPES
+    Entries that do not meet the vaildation requirements will generate an error message
 
     To also provide a generate RAG button that will produce the risk score for the individual.
 
@@ -69,6 +71,14 @@ class InputGUI:
         
         #method to run full RAG calculation
         def rag_calc():
+            """
+            This is the method attached to the Calculate RAG button
+            It uses the AssessRev methods to create an instance of the AssessRev class and calculate the Rag score
+            The AssessRev Rag score is converted to a single red/amber/green based on score (<=1 = Green, >3 = Red, else Amber)
+            Contains error message functionality if data fields are not correct
+            Extracts key outputs for display on interface in frame_outputs
+            Data entered into interface is not stored; will be overwritten by the next rag calculated
+            """
             #create AssessRev instance from data entry
             contactData = [pers_val.get(),con_date.get(),dob.get(),cb_status.get(),cb_curr.get(),cb_new.get()]
             try:
@@ -117,6 +127,9 @@ class InputGUI:
             lbl_new.config(text=new_info)
         
         def export_rag():
+            """
+            Exports the calculated RAG output to a text file
+            """
             #get the info
             e_rag=lbl_rag.cget("text")
             e_per=lbl_Person.cget("text")
@@ -142,6 +155,9 @@ class InputGUI:
                 print(f.read())
 
         def clear_data():
+            """
+            Clears all previously entered data from interface
+            """
             pers_id.config(pers_val.set(""))
             dateReset = dt.datetime.now()
             con_date.set_date(dateReset)
@@ -259,7 +275,6 @@ class InputGUI:
         lbl_new=Label(self.frame_output,text=" ",justify="left")
         lbl_new.grid(row=7,column=1)
         
-
     pass
 
 root=Tk()

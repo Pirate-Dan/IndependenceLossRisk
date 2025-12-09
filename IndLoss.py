@@ -56,6 +56,9 @@ class AssessRev:
         ServFac - The risk modification factor associated with the service type in NewServ. Default = 1
         ServChange - The risk modification factor associated with the direction of chnage between CurrentServ and NewServ.  Default = 1
         Rag - The combined risk score of the person entering non-independent care within the next 12 months, Default = 1
+
+    Error handling:
+        Entry of incorrect data types will generate a different value error depending on where the error is
     """  
     #add validation lists for service type and status
     SERV_TYPES = ServType
@@ -63,6 +66,24 @@ class AssessRev:
 
     #create initialisation method to include key details at initialisation
     def __init__(self,PersonId,ContactDate,BirthDate,Status,CurrentServ,NewServ,AgeFac=1,ServFac=1,ServChange=1,StatusFac=1,Rag=1):
+        """
+        Docstring for __init__
+        
+        :param self: Defines instance of class
+        :param PersonId: A unique identifier for the person requiring a rag
+        :param ContactDate: The date the contact was completed
+        :param BirthDate: The individuals date of birth
+        :param Status: The current setting of the person (Transition,Community,Hospital Discharge,Existing Service)
+        :param CurrentServ: The service being reviewed.  If new to ASC, select 'None'
+        :param NewServ: The service being recommended as a result of the review/assessment
+        :param AgeFac: Calculated risk modifer based on age at contact. Default is 1. Overwirtten by update_AgeFac
+        :param ServFac: Calculated risk modifier based on recommended service. Default is 1. Overwritten by update_ServFac
+        :param ServChange: Calculated risk modifier based on the service chnage post review/assessment. Default is 1. Overwritten by update_ServChange
+        :param StatusFac: Calculated risk modifier based on current setting. Default is 1. Overwritten by update_StatusFac
+        :param Rag: Calculated Rag score based on AgeFac, ServFac, ServChange and StatusFac. Default is 1. Overwritten by update_Rag
+
+        Data validation applies to parameters
+        """
         if len(PersonId)>0:
             self.PersonId = PersonId
         else:
@@ -149,21 +170,35 @@ class AssessRev:
 
     #add a new function to update the modification factor associated with entry route
     def update_StatusFac(self):
+        """
+        This method updates the StatusFac parameter of an existing AssessRev instance
+        No additional attributes required
+        """
         StatusMod = StatusInfo.at[self.Status,"Modifier"]
         self.StatusFac = StatusMod
 
     #add function to recalculate RAG based on risk factors
     def update_Rag(self):
+        """
+        This method calculates the RAG based on risk factors of an existing AssessRev instance
+        No additional attributes required
+        """
         newRag = float(self.Rag)*float(self.ServFac)*float(self.AgeFac)*float(self.ServChange)*float(self.StatusFac)
         self.Rag = newRag
     
     #add class methods to provide details of valid Service and Status types
     @classmethod
     def get_SERV_TYPES(cls):
+        """
+        Returns a list of acceptable service types for the AssessRev class parameters CurrServ and NewServ
+        """
         return cls.SERV_TYPES
     
     @classmethod
     def get_STATUS_TYPES(cls):
+        """
+        Returns a list of acceptable settings for AssessRev parameter Status
+        """
         return cls.STATUS_TYPES
     
     pass
