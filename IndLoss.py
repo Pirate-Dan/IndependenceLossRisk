@@ -1,9 +1,6 @@
 #import key libraries
 import pandas as pd
-import tkinter as tk
-from tkinter import *
-from tkinter import ttk,Tk,Label,Button,Entry,OptionMenu
-from tkcalendar import DateEntry
+from tkinter import Tk,Label,Button
 import datetime as dt
 import math
 import numpy as np
