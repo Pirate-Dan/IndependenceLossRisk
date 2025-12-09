@@ -167,19 +167,3 @@ class AssessRev:
         return cls.STATUS_TYPES
     
     pass
-
-#assess1 = AssessRev("789231","21/05/2025","13/07/1935","Hospital Discharge","Homecare: Low","Homecare: Mid")
-
-#assess1.update_ServChange()
-#print(assess1.ServChange)
-#assess1.update_AgeFac()
-#assess1.update_ServFac()
-#print(assess1.ServFac)
-#assess1.update_StatusFac()
-#print(assess1.StatusFac)
-#assess1.update_Rag()
-#print("Rag:",assess1.Rag,"ServFac:",assess1.ServFac,"ServChange:",assess1.ServChange,"AgeFac:",assess1.AgeFac,"StatusFac:",assess1.StatusFac)
-#print(ServInfo)
-#services = AssessRev.get_SERV_TYPES()
-#print(services)
-#print(AssessRev.get_STATUS_TYPES())
