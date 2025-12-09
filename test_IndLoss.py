@@ -61,6 +61,15 @@ def test_NewServValueError():
     with pytest.raises(ValueError):
         AssessRev("789231","21/05/2025","13/07/1935","Hospital Discharge","Homecare: Low","NotInList")
 
+def test_currServValueError():
+    with pytest.raises(ValueError):
+        AssessRev("789231","21/05/2025","13/07/1935","Hospital Discharge","NotInList","Homecare: Mid")
+
+def test_StatusValueError():
+    with pytest.raises(ValueError):
+        AssessRev("789231","21/05/2025","13/07/1935","NotInList","Homecare: Low","Homecare: Mid")
+
+
 
 
 #AgeFac=1,ServFac=1,ServChange=1,StatusFac=1,Rag=1
