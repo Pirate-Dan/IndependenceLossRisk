@@ -69,7 +69,14 @@ def test_StatusValueError():
     with pytest.raises(ValueError):
         AssessRev("789231","21/05/2025","13/07/1935","NotInList","Homecare: Low","Homecare: Mid")
 
+def test_contactDateException():
+    with pytest.raises(ValueError):
+        AssessRev("789231","NotDate","13/07/1935","Hospital Discharge","Homecare: Low","Homecare: Mid")
 
+def test_BirthDateException():
+    with pytest.raises(ValueError):
+        AssessRev("789231","21/05/2025","NotDate","Hospital Discharge","Homecare: Low","Homecare: Mid")
 
-
-#AgeFac=1,ServFac=1,ServChange=1,StatusFac=1,Rag=1
+def test_PersonIdException():
+    with pytest.raises(ValueError):
+        AssessRev("","789231","21/05/2025","13/07/1935","Hospital Discharge","Homecare: Low","Homecare: Mid")

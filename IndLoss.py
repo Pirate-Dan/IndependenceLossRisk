@@ -67,9 +67,18 @@ class AssessRev:
 
     #create initialisation method to include key details at initialisation
     def __init__(self,PersonId,ContactDate,BirthDate,Status,CurrentServ,NewServ,AgeFac=1,ServFac=1,ServChange=1,StatusFac=1,Rag=1):
-        self.PersonId = PersonId
-        self.ContactDate = pd.to_datetime(ContactDate,dayfirst=True)
-        self.BirthDate = pd.to_datetime(BirthDate,dayfirst=True)
+        if len(PersonId)>0:
+            self.PersonId = PersonId
+        else:
+            raise ValueError("Please enter a person ID")
+        try:
+            self.ContactDate = pd.to_datetime(ContactDate,dayfirst=True)
+        except:
+            raise ValueError("Contact Date is not valid")
+        try:
+            self.BirthDate = pd.to_datetime(BirthDate,dayfirst=True)
+        except:
+            raise ValueError("Birth Date is not a valid date")
         if not (Status in AssessRev.STATUS_TYPES):
             raise ValueError(f"{Status} not a valid status.")
         else:
