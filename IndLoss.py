@@ -53,11 +53,12 @@ class AssessRev:
         StatusFac: Calculated risk modifier based on current setting. Default is 1. Overwritten by update_StatusFac
         Rag: Calculated Rag score based on AgeFac, ServFac, ServChange and StatusFac. Default is 1. Overwritten by update_Rag
 
-    Methods:
+     Methods:
         update_AgeFac() - allows the default AgeFac created at initiation to be replaced with a calculated version
-        update_ServFac()
-        update_ServChange()
-        update_Rag()
+        update_ServFac() - allows the default ServFac created at initiation to be replaced with a calculated version
+        update_ServChange() - allows the default ServChange created at initiation to be replaced with a calculated version
+        update_StatusFac() - allows the default StatusFac created at initiation to be replaced with a calculated version
+        update_Rag() - Replaces the default RAG with one calculated from the risk factors
 
     Error handling:
         Entry of incorrect data types will generate a different value error depending on where the error is
