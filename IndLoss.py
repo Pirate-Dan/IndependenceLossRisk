@@ -3,7 +3,7 @@ import pandas as pd
 import datetime as dt
 import math
 import numpy as np
-import csv
+
 
 #set essential formatting code
 dateformat = "%m/%d/%Y"
@@ -23,7 +23,7 @@ ServInfo = np.hstack((ServInfo,np.array((ServIntens)).reshape(servLen,1),np.arra
 ServInfo = pd.DataFrame(ServInfo,columns = Header)
 ServInfo = ServInfo.set_index("Service")
 
-#create dataframe of key info
+#create dataframe of key setting info
 StatusRoute = ["Transition","Community","Hospital Discharge","Existing Service"]
 StatusModify = [1.2,1.2,1.5,1]
 StatusHeader = ["Entry","Modifier"]
@@ -40,22 +40,24 @@ class AssessRev:
     """
     This contains details of individuals at the point of a review or assessment that underpin the creation of a non-independent care risk rating
 
+    Attributes:
+        PersonId: A unique identifier for the person requiring a rag
+        ContactDate: The date the contact was completed
+        BirthDate: The individuals date of birth
+        Status: The current setting of the person (Transition,Community,Hospital Discharge,Existing Service)
+        CurrentServ: The service being reviewed.  If new to ASC, select 'None'
+        NewServ: The service being recommended as a result of the review/assessment
+        AgeFac: Calculated risk modifer based on age at contact. Default is 1. Overwirtten by update_AgeFac
+        ServFac: Calculated risk modifier based on recommended service. Default is 1. Overwritten by update_ServFac
+        ServChange: Calculated risk modifier based on the service chnage post review/assessment. Default is 1. Overwritten by update_ServChange
+        StatusFac: Calculated risk modifier based on current setting. Default is 1. Overwritten by update_StatusFac
+        Rag: Calculated Rag score based on AgeFac, ServFac, ServChange and StatusFac. Default is 1. Overwritten by update_Rag
+
     Methods:
         update_AgeFac() - allows the default AgeFac created at initiation to be replaced with a calculated version
         update_ServFac()
         update_ServChange()
         update_Rag()
-
-    Attributes:
-        PersonId - This is the unique identification number for the person recieving the assessment or review. Required to be an integer
-        ContactDate - The date that the review or assessment was completed
-        BirthDate - The person recieving the reviews date of birth
-        CurrentServ - This is the service currently in place; defined list of options
-        NewServ - This is the service that will be in place following the review; defined list, shared with CurrentServ
-        AgeFac - The risk modification factor associated with the persons age band.  Default = 1
-        ServFac - The risk modification factor associated with the service type in NewServ. Default = 1
-        ServChange - The risk modification factor associated with the direction of chnage between CurrentServ and NewServ.  Default = 1
-        Rag - The combined risk score of the person entering non-independent care within the next 12 months, Default = 1
 
     Error handling:
         Entry of incorrect data types will generate a different value error depending on where the error is
@@ -110,7 +112,7 @@ class AssessRev:
             self.NewServ = NewServ
         self.AgeFac = AgeFac
         self.ServFac = ServFac
-        self.ServChange=ServChange
+        self.ServChange = ServChange
         self.StatusFac = StatusFac
         self.Rag = Rag
 
